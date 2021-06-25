@@ -81,13 +81,14 @@ export function initState (vm: Component) {
  */
 
 /**
- * 
+ * 处理props对象
  * @param {*} vm 
  * @param {*} propsOptions 
  */
 function initProps (vm: Component, propsOptions: Object) {
   const propsData = vm.$options.propsData || {}
   const props = vm._props = {}
+  // 缓存props的每个key，性能优化
   // cache prop keys so that future props updates can iterate using Array
   // instead of dynamic object key enumeration.
   const keys = vm.$options._propKeys = []
@@ -96,15 +97,19 @@ function initProps (vm: Component, propsOptions: Object) {
   if (!isRoot) {
     toggleObserving(false)
   }
+  // 遍历props
   for (const key in propsOptions) {
     keys.push(key)
+    // 获取props[key]的默认值
     const value = validateProp(key, propsOptions, propsData, vm)
     /* istanbul ignore else */
-    // 给props的每个可以 设置数据响应式 
+    // 给props的每个key 设置数据响应式 
     defineReactive(props, key, value)
     // static props are already proxied on the component's prototype
     // during Vue.extend(). We only need to proxy props defined at
     // instantiation here.
+
+    // 代理key到vm实例上
     if (!(key in vm)) {
       proxy(vm, `_props`, key)
     }
