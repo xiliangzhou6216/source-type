@@ -1,3 +1,4 @@
+/* @flow */
 import config from "../config";
 import { initProxy } from "./proxy";
 import { initState } from "./state";
@@ -10,12 +11,12 @@ import { extend, mergeOptions, formatComponentName } from "../util/index";
 
 let uid = 0;
 
-/**
- * @description: 定义 Vue.prototype._init 方法
- * @param {*} Vue 构造函数
- * @return {*}
- * @author: xiliang
- */
+// /**
+//  * @description: 定义 Vue.prototype._init 方法
+//  * @param {*} Vue 构造函数
+//  * @return {*}
+//  * @author: xiliang
+//  */
 
 export function initMixin(Vue: Class<Component>) {
   // 负责Vue初始化的过程
