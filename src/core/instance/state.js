@@ -36,6 +36,7 @@ const sharedPropertyDefinition = {
   set: noop
 }
 
+// 设置代理，将key代理到target上
 export function proxy (target: Object, sourceKey: string, key: string) {
   sharedPropertyDefinition.get = function proxyGetter () {
     return this[sourceKey][key]
@@ -74,10 +75,8 @@ export function initState (vm: Component) {
 }
 
 /**
- * 
  * watch：更实用数据变化执行异步的时候或者开销较大的操作的时候
  * computed:更实用同步计算的
- *  
  */
 
 /**
@@ -268,7 +267,14 @@ function createGetterInvoker(fn) {
     return fn.call(this, this)
   }
 }
-
+/**
+ * 1. 教研 methods[key]是不是一个函数
+ * 2. methods的key不能和props的key冲突或者Vue实例上已有的方法冲突，一般是一些内置方法，比如 $ 和 _ 开头的方法
+ * 3. methods[key]放到实例上
+ * 
+ * @param {*} vm 
+ * @param {*} methods 
+ */
 function initMethods (vm: Component, methods: Object) {
   const props = vm.$options.props
   for (const key in methods) {

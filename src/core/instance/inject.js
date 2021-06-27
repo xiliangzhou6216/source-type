@@ -24,7 +24,7 @@ export function initProvide (vm: Component) {
  * 1. 得到result[key]=val
  * 2. 对结构数据进行响应式处理，代理每个 key 到 vm 实例 
  *  
- * 祖代像所有子代组件透传数据
+ * 祖代向所有子代组件透传数据
  * 
  */
 export function initInjections (vm: Component) {
