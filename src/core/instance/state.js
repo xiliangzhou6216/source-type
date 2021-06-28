@@ -36,7 +36,7 @@ const sharedPropertyDefinition = {
   set: noop
 }
 
-// 设置代理，将key代理到target上
+// 设置代理，将key代理到target上，this.key 访问
 export function proxy (target: Object, sourceKey: string, key: string) {
   sharedPropertyDefinition.get = function proxyGetter () {
     return this[sourceKey][key]
@@ -108,7 +108,7 @@ function initProps (vm: Component, propsOptions: Object) {
     // during Vue.extend(). We only need to proxy props defined at
     // instantiation here.
 
-    // 代理key到vm实例上
+    // 代理key到vm实例上,方便通过this.propsKey访问
     if (!(key in vm)) {
       proxy(vm, `_props`, key)
     }
@@ -116,6 +116,14 @@ function initProps (vm: Component, propsOptions: Object) {
   toggleObserving(true)
 }
 
+
+/**
+ * 1. 判重处理
+ * 2. 代理data对象上的属性到vm实例
+ * 3. 为对象的每个key设置响应式 
+ * 
+ * @param {*} vm 
+ */
 function initData (vm: Component) {
   let data = vm.$options.data
   data = vm._data = typeof data === 'function'
@@ -181,6 +189,8 @@ function initComputed (vm: Component, computed: Object) {
 
   for (const key in computed) {
     const userDef = computed[key]
+    console.log(userDef,888888)
+    // 函数或者是访问属性的对象
     const getter = typeof userDef === 'function' ? userDef : userDef.get
     if (process.env.NODE_ENV !== 'production' && getter == null) {
       warn(

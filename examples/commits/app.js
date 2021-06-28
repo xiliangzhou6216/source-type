@@ -4,11 +4,12 @@
  * @Autor: xiliang
  * @Date: 2021-06-10 13:58:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-06-21 17:34:33
+ * @LastEditTime: 2021-06-28 10:52:40
  */
 /* global Vue */
 
 var apiURL = "https://api.github.com/repos/vuejs/vue/commits?per_page=3&sha=";
+
 
 /**
  * Actual demo
@@ -18,9 +19,13 @@ new Vue({
   el: "#demo",
 
   data: {
+    childProps:'121221',
     branches: ["master", "dev"],
     currentBranch: "master",
     commits: null,
+  },
+  components:{
+    // Child
   },
 
   created: function () {
