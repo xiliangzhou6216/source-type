@@ -1,3 +1,4 @@
+
 /*
  * not type checking this file because flow doesn't play well with
  * dynamically accessing methods on Array prototype
@@ -6,6 +7,7 @@
 import { def } from '../util/index'
 
 const arrayProto = Array.prototype
+// 克隆一份arrayProto
 export const arrayMethods = Object.create(arrayProto)
 
 const methodsToPatch = [
@@ -37,6 +39,7 @@ methodsToPatch.forEach(function (method) {
         inserted = args.slice(2)
         break
     }
+    // 新插入的元素做响应式处理
     if (inserted) ob.observeArray(inserted)
     // notify change
     ob.dep.notify()

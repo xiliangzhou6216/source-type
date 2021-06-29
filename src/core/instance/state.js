@@ -179,6 +179,7 @@ export function getData (data: Function, vm: Component): any {
   }
 }
 
+// 默认懒执行
 const computedWatcherOptions = { lazy: true }
 
 function initComputed (vm: Component, computed: Object) {
@@ -189,8 +190,8 @@ function initComputed (vm: Component, computed: Object) {
 
   for (const key in computed) {
     const userDef = computed[key]
-    console.log(userDef,888888)
-    // 函数或者是访问属性的对象
+    // console.log(userDef,888888)
+    // 函数或者是有get访问属性的对象
     const getter = typeof userDef === 'function' ? userDef : userDef.get
     if (process.env.NODE_ENV !== 'production' && getter == null) {
       warn(
@@ -199,12 +200,14 @@ function initComputed (vm: Component, computed: Object) {
       )
     }
 
+    // 为计算属性每个key创建watcher观察者
     if (!isSSR) {
       // create internal watcher for the computed property.
       watchers[key] = new Watcher(
         vm,
         getter || noop,
         noop,
+        // 配置项，computed默认是懒执行
         computedWatcherOptions
       )
     }
@@ -226,6 +229,7 @@ function initComputed (vm: Component, computed: Object) {
   }
 }
 
+// 代理computed的key到vm实例上
 export function defineComputed (
   target: any,
   key: string,
@@ -257,10 +261,24 @@ export function defineComputed (
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 
+/**
+ * 
+ * @param {*} key 
+ * @returns 返回一个函数，这个函数在访问vm.computedKeys是会被执行，然后返回执行结果
+ */
 function createComputedGetter (key) {
   return function computedGetter () {
     const watcher = this._computedWatchers && this._computedWatchers[key]
     if (watcher) {
+       // computed属性值缓存的原理是结合watcher.dirty、watcher.evaluate、watcher.update实现的
+       // <template>
+       //     <div>{{computedPropterty}}</div>
+       //     <div>{{computedPropterty}}</div>
+       // </template>
+       // 像这种情况下，在页面的一次渲染中，两个dom中的computedPropterty只有第一个执行，访问了属性会执行watcher.evaluate()方法 第二个就不会走计算过程了
+       // 因为上一次执行watcher.evaluate把watcher.dirty置为了false
+       // 只有等到页面更新后（依赖数据变化）watcher.update方法会把  watcher.dirty置为了true 下次页面更新时会重新计算属性
+      
       if (watcher.dirty) {
         watcher.evaluate()
       }
@@ -272,6 +290,7 @@ function createComputedGetter (key) {
   }
 }
 
+// 同createComputedGetter
 function createGetterInvoker(fn) {
   return function computedGetter () {
     return fn.call(this, this)
@@ -313,6 +332,7 @@ function initMethods (vm: Component, methods: Object) {
   }
 }
 
+// 初始watch
 function initWatch (vm: Component, watch: Object) {
   for (const key in watch) {
     const handler = watch[key]
@@ -326,16 +346,23 @@ function initWatch (vm: Component, watch: Object) {
   }
 }
 
+/**
+ * 1. 兼容性处理 保证handler是一个函数
+ * 2. 调用$watch
+ * 
+ */
 function createWatcher (
   vm: Component,
   expOrFn: string | Function,
   handler: any,
   options?: Object
 ) {
+  //检测是否一个对象
   if (isPlainObject(handler)) {
     options = handler
     handler = handler.handler
   }
+  // 函数是字符串，说明是一个methods方法  直接去vm上获取
   if (typeof handler === 'string') {
     handler = vm[handler]
   }
@@ -362,30 +389,43 @@ export function stateMixin (Vue: Class<Component>) {
       warn(`$props is readonly.`, this)
     }
   }
+  
+  // vue构造函数原型添加$data、$props方法
   Object.defineProperty(Vue.prototype, '$data', dataDef)
   Object.defineProperty(Vue.prototype, '$props', propsDef)
 
   Vue.prototype.$set = set
   Vue.prototype.$delete = del
 
+  /**
+   *  创建watcher
+   * @param {*} expOrFn 
+   * @param {*} cb  
+   * @param {*} options 
+   * @returns 返回 unwatch 函数,用来取消watch监听
+   */
   Vue.prototype.$watch = function (
     expOrFn: string | Function,
     cb: any,
     options?: Object
   ): Function {
     const vm: Component = this
+    //兼容性处理
     if (isPlainObject(cb)) {
       return createWatcher(vm, expOrFn, cb, options)
     }
     options = options || {}
+    // 标记用户为watcher
     options.user = true
     const watcher = new Watcher(vm, expOrFn, cb, options)
+    // 立马执行
     if (options.immediate) {
       const info = `callback for immediate watcher "${watcher.expression}"`
       pushTarget()
       invokeWithErrorHandling(cb, vm, [watcher.value], vm, info)
       popTarget()
     }
+    // vm.$watch()返回一个取消观察函数，用来停止触发回调
     return function unwatchFn () {
       watcher.teardown()
     }
