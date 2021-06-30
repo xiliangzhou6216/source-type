@@ -55,8 +55,9 @@ export class Observer {
     if (Array.isArray(value)) {
       // 兼容性，有些浏览器不支持 比如IE6-10，Opera10.1
       // 覆盖数组的默认7个原型方法,实现数组响应式
+      // 有 __proto__
       if (hasProto) {
-        // 有 __proto__
+        // Object.setPrototypeOf(value,arrayMethods)
         protoAugment(value, arrayMethods)
       } else {
         copyAugment(value, arrayMethods, arrayKeys)
@@ -84,7 +85,7 @@ export class Observer {
   /**
    * Observe a list of Array items.
    */
-  // 数组
+  // 遍历数组,为数组的每一项设置响应式
   observeArray (items: Array<any>) {
     for (let i = 0, l = items.length; i < l; i++) {
       observe(items[i])
@@ -98,6 +99,8 @@ export class Observer {
  * Augment a target Object or Array by intercepting
  * the prototype chain using __proto__
  */
+
+// 增强数组的原型
 function protoAugment (target, src: Object) {
   /* eslint-disable no-proto */
   target.__proto__ = src
@@ -156,6 +159,18 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
  * Define a reactive property on an Object.
  */
 
+/**
+ * 拦截obj[key]的读取操作和设置操作
+ * 1. 在第一次读取时依赖收集,比如执行 render 函数生成虚拟 DOM 时会有读取操作
+ * 2. 设置新值通知依赖更新
+ * 3. initData initProps也会调用
+ * @param {*} obj 
+ * @param {*} key 
+ * @param {*} val 
+ * @param {*} customSetter 
+ * @param {*} shallow 
+ * @returns 
+ */
 
 export function defineReactive (
   obj: Object,
@@ -186,12 +201,15 @@ export function defineReactive (
     //拦截对obj[key]读取操作
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
+      // Dep.target的值为 watcher
       if (Dep.target) {
-        // 依赖收集，在dep中添加watcher
+        // 依赖收集，在 dep 中添加 watcher，也在 watcher 中添加 dep
         dep.depend()
+        // 嵌套对象中依赖收集
         if (childOb) {
           childOb.dep.depend()
           if (Array.isArray(value)) {
+            // 为数组项为对象时 添加依赖
             dependArray(value)
           }
         }
@@ -202,7 +220,9 @@ export function defineReactive (
     set: function reactiveSetter (newVal) {
       const value = getter ? getter.call(obj) : val
       /* eslint-disable no-self-compare */
-      if (newVal === value || (newVal !== newVal && value !== value)) {
+      // 新旧值一样不触发响应式
+      if (newVal === value || (newVal !== newVal && 
+        value !== value)) {
         return
       }
       /* eslint-enable no-self-compare */
@@ -217,7 +237,9 @@ export function defineReactive (
       } else {
         val = newVal
       }
+      // 对新值进行观察,让新值也时响应式的
       childOb = !shallow && observe(newVal)
+      // 依赖通知更新
       dep.notify()
     }
   })

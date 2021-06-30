@@ -7,7 +7,7 @@
 import { def } from '../util/index'
 
 const arrayProto = Array.prototype
-// 克隆一份arrayProto
+// 创建一份arrayProto
 export const arrayMethods = Object.create(arrayProto)
 
 const methodsToPatch = [

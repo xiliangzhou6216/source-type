@@ -24,6 +24,11 @@ let uid = 0
  * and fires callback when the expression value changes.
  * This is used for both the $watch() api and directives.
  */
+
+
+// 数据更新时 watcher会被触发,访问计算属性或者$watch()也会被触发watcher
+// 一个组件一个 watcher 这个不理解
+
 export default class Watcher {
   vm: Component;
   expression: string;
@@ -77,6 +82,8 @@ export default class Watcher {
       ? expOrFn.toString()
       : ''
     // parse expression for getter
+    // this.getter=function (){ return this.xx }
+    // 如果后续this.xx更新时,就会触发响应式
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn
     } else {
@@ -99,11 +106,15 @@ export default class Watcher {
   /**
    * Evaluate the getter, and re-collect dependencies.
    */
+
+  // 重新依赖收集,页面更新时,会重新执行一次render函数,执行期间会出触发读取操作.这个时候会依赖收集
   get () {
+    // Dep.target=this
     pushTarget(this)
     let value
     const vm = this.vm
     try {
+      // 执行回调,比如 updateComponent，进入 patch 阶段
       value = this.getter.call(vm, vm)
     } catch (e) {
       if (this.user) {
@@ -117,6 +128,7 @@ export default class Watcher {
       if (this.deep) {
         traverse(value)
       }
+      //关闭 Dep.target Dep.target=null
       popTarget()
       this.cleanupDeps()
     }
@@ -126,12 +138,22 @@ export default class Watcher {
   /**
    * Add a dependency to this directive.
    */
+
+   /**
+    * 1.添加dep到自己(watcher)
+    * 2.添加自己(watcher)到dep 
+    * @param {*} dep 
+    */
   addDep (dep: Dep) {
+    //判重 如果dep.id有的话 则不重复添加
     const id = dep.id
     if (!this.newDepIds.has(id)) {
+      // 缓存dep.id 判重
       this.newDepIds.add(id)
+      // 添加dep
       this.newDeps.push(dep)
       if (!this.depIds.has(id)) {
+        //添加自己(watcher)到dep 
         dep.addSub(this)
       }
     }
@@ -167,8 +189,13 @@ export default class Watcher {
     if (this.lazy) {
       this.dirty = true
     } else if (this.sync) {
+      // 同步执行
+      // 在使用 vm.$watch 或者 watch 选项时可以传一个 sync 选项，
+      // 当为true时,watcher就不走异步更行了,就直接走this.run方法
+      // 这个属性官方文档没有出现
       this.run()
     } else {
+      // 更新时一般都这里，将 watcher 放入 watcher 队列
       queueWatcher(this)
     }
   }
@@ -177,6 +204,7 @@ export default class Watcher {
    * Scheduler job interface.
    * Will be called by the scheduler.
    */
+  // 刷新队列函数
   run () {
     if (this.active) {
       const value = this.get()
@@ -191,6 +219,7 @@ export default class Watcher {
         // set new value
         const oldValue = this.value
         this.value = value
+        // 如果是用户 watcher
         if (this.user) {
           const info = `callback for watcher "${this.expression}"`
           invokeWithErrorHandling(this.cb, this.vm, [value, oldValue], this.vm, info)
@@ -205,6 +234,10 @@ export default class Watcher {
    * Evaluate the value of the watcher.
    * This only gets called for lazy watchers.
    */
+
+  /**
+   * 懒执行的 watcher 会调用该方法
+   */
   evaluate () {
     this.value = this.get()
     this.dirty = false
@@ -213,6 +246,7 @@ export default class Watcher {
   /**
    * Depend on all deps collected by this watcher.
    */
+  // 访问计算属性调用
   depend () {
     let i = this.deps.length
     while (i--) {
