@@ -86,6 +86,7 @@ export default class Watcher {
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn
     } else {
+    //expOrFn 可能是字符串  
     // this.getter=function (){ return this.xx }
     // 在 this.get 中执行 this.getter 时会触发依赖收集
     // 如果后续this.xx更新时,就会触发响应式
@@ -118,14 +119,13 @@ export default class Watcher {
     try {
       // 执行watcher实例取值方法的时候会触发key的getter方法,进行依赖收集
 
-      // 1. 实例化一个组件时,会调用new Watcher() 接着就会实例化watcher时传递的updateComponent方法，
-      // 这是会先执行vm._render()函数,生成VNode,在生成组件VNode的过程中就会有读取操作,这时候就可以进行依赖收集
+      // 1. 实例化一个组件时,会调用new Watcher()实例化一个渲染 watcher,然后会调用 watcher.get() 方法 接着就会实例化watcher时传递的updateComponent方法，
+      // 然后就会先执行vm._render()函数,生成VNode,在生成组件VNode的过程中就会有读取操作,这时候就可以进行依赖收集
       // 2. watch选项
       // 3. computed选项
       value = this.getter.call(vm, vm)
     } catch (e) {
       if (this.user) {
-
         handleError(e, vm, `getter for watcher "${this.expression}"`)
       } else {
         throw e
@@ -159,6 +159,7 @@ export default class Watcher {
       // 缓存dep.id 判重
       this.newDepIds.add(id)
       // 添加dep
+      // debugger
       this.newDeps.push(dep)
       if (!this.depIds.has(id)) {
         //添加自己(watcher)到dep 
