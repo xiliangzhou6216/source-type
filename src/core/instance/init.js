@@ -50,6 +50,7 @@ export function initMixin(Vue: Class<Component>) {
        * 2. 子组件 componnents:{ xx } 局部注册，执行编译器生成的render函数 进行选项合并
        * 3. 这里根组件自身情况
        */
+      //  debugger
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
         options || {},
@@ -94,6 +95,7 @@ export function initInternalComponent(
   vm: Component,
   options: InternalComponentOptions
 ) {
+
   // 基于构造函数上的配置选项创建vm.$options
   const opts = (vm.$options = Object.create(vm.constructor.options));
   // doing this because it's faster than dynamic enumeration.
