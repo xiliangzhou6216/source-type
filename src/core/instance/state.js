@@ -60,7 +60,7 @@ export function initState (vm: Component) {
   if (opts.props) initProps(vm, opts.props)
   // 处理 methods 对象 然后判重   最后得到 vm[key] = methods[key]
   if (opts.methods) initMethods(vm, opts.methods)
-  // 1. 代理到vm实例上  2. 判重  3.data对象的数据设置响应式 
+  // 1. 绑定到vm实例上  2. 判重  3.data对象的数据设置响应式 
   if (opts.data) {
     initData(vm)
   } else {

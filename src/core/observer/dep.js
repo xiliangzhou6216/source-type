@@ -1,3 +1,11 @@
+/*
+ * @Description: 
+ * @Version: 2.0
+ * @Autor: xiliang
+ * @Date: 2021-06-25 17:40:17
+ * @LastEditors: 
+ * @LastEditTime: 2021-07-13 11:19:10
+ */
 
 /* @flow */
 
@@ -75,6 +83,7 @@ const targetStack = []
 
 // 依赖收集的时候会调用,Dep.target = Watcher
 export function pushTarget (target: ?Watcher) {
+  debugger
   targetStack.push(target)
   Dep.target = target
 }

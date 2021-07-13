@@ -4,7 +4,7 @@
  * @Autor: xiliang
  * @Date: 2021-06-10 13:58:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-07-12 17:37:19
+ * @LastEditTime: 2021-07-13 11:17:30
 -->
 <!DOCTYPE html>
 <html>
@@ -39,10 +39,7 @@
 <body>
   <div id="demo">
     <button @click="buttonClick">父组件触发</button>
-  
-    <!-- {{currentBranch}}
-    {{qq}} -->
-    <!-- <ceshi> </ceshi> -->
+    <!-- <ceshi @hook:mounted="childMounted"></ceshi> -->
   </div>
   <script>
     const ComponentA ={
@@ -78,6 +75,9 @@
         ComponentA
       },
       created() {
+       
+      },
+      mounted() {
         console.log(this,'子级');
       },
       updated() {
@@ -125,13 +125,11 @@
       components: {
         // ComponentB
       },
+      mounted() {
 
+      },
       created: function () {
-        // this.message = '123123123123213123'
         console.log(this,'父级');
-        this.$on('test',function(val){
-            console.log(val,55555555555555)
-          })
       },
       watch: {
         message(val){
@@ -144,9 +142,10 @@
         }
       },
       methods: {
-         buttonClick(){
-         this.$emit('test', '333')
-         this.$emit('test', 'h4444i')
+        childMounted(){
+          console.log("Child was mounted");
+        },
+        buttonClick(){
           console.log(this,'更新了')
         }
       },

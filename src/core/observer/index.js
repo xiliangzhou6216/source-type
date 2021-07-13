@@ -126,6 +126,7 @@ function copyAugment (target: Object, src: Object, keys: Array<string>) {
  */
 
 /** 响应式的入口
+ * //创建观察者实例
  * 
  * @param {*} value 
  * @param {*} asRootData 
