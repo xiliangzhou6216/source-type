@@ -190,6 +190,7 @@ export default class Watcher {
   }
 
   /**
+   * 依赖改变
    * Subscriber interface.
    * Will be called when a dependency changes.
    */
@@ -231,8 +232,10 @@ export default class Watcher {
         // 如果是用户 watcher
         if (this.user) {
           const info = `callback for watcher "${this.expression}"`
+          // 执行this.cb回调函数
           invokeWithErrorHandling(this.cb, this.vm, [value, oldValue], this.vm, info)
         } else {
+          console.log(9999999999)
           this.cb.call(this.vm, value, oldValue)
         }
       }

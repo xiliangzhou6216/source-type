@@ -125,9 +125,9 @@ function copyAugment (target: Object, src: Object, keys: Array<string>) {
  * or the existing observer if the value already has one.
  */
 
-/** 响应式的入口
- * //创建观察者实例
- * 
+/** 
+ * 响应式的入口
+ * 创建观察者实例
  * @param {*} value 
  * @param {*} asRootData 
  * @returns 

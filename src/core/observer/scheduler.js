@@ -93,6 +93,7 @@ function flushSchedulerQueue () {
     id = watcher.id
     has[id] = null
     watcher.run()
+
     // in dev build, check and stop circular updates.
     if (process.env.NODE_ENV !== 'production' && has[id] != null) {
       circular[id] = (circular[id] || 0) + 1
@@ -114,6 +115,7 @@ function flushSchedulerQueue () {
   const activatedQueue = activatedChildren.slice()
   const updatedQueue = queue.slice()
 
+  // 重置调度
   resetSchedulerState()
 
   // call component updated and activated hooks
@@ -128,6 +130,7 @@ function flushSchedulerQueue () {
 }
 
 function callUpdatedHooks (queue) {
+  
   let i = queue.length
   while (i--) {
     const watcher = queue[i]
@@ -157,6 +160,8 @@ function callActivatedHooks (queue) {
 }
 
 /**
+ * 将watcher放入watcher队列
+ * 
  * Push a watcher into the watcher queue.
  * Jobs with duplicate IDs will be skipped unless it's
  * pushed when the queue is being flushed.
@@ -164,8 +169,11 @@ function callActivatedHooks (queue) {
 export function queueWatcher (watcher: Watcher) {
   const id = watcher.id
   if (has[id] == null) {
+    // 缓存watcher.id
     has[id] = true
+
     if (!flushing) {
+      // 当前是为刷新队列状态
       queue.push(watcher)
     } else {
       // if already flushing, splice the watcher based on its id

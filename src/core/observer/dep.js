@@ -3,8 +3,8 @@
  * @Version: 2.0
  * @Autor: xiliang
  * @Date: 2021-06-25 17:40:17
- * @LastEditors: 
- * @LastEditTime: 2021-07-13 11:19:10
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-07-15 15:04:40
  */
 
 /* @flow */
@@ -59,6 +59,7 @@ export default class Dep {
       // order=
       subs.sort((a, b) => a.id - b.id)
     }
+    // 遍历dep中存储的watcher,执行 watcher.update()
     for (let i = 0, l = subs.length; i < l; i++) {
       subs[i].update()
     }
@@ -83,7 +84,6 @@ const targetStack = []
 
 // 依赖收集的时候会调用,Dep.target = Watcher
 export function pushTarget (target: ?Watcher) {
-  debugger
   targetStack.push(target)
   Dep.target = target
 }
