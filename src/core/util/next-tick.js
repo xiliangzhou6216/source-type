@@ -10,6 +10,8 @@ export let isUsingMicroTask = false
 const callbacks = []
 let pending = false
 
+
+// 刷新callbacks里的函数
 function flushCallbacks () {
   pending = false
   const copies = callbacks.slice(0)
@@ -40,9 +42,13 @@ let timerFunc
 // Promise is available, we will use it:
 /* istanbul ignore next, $flow-disable-line */
 if (typeof Promise !== 'undefined' && isNative(Promise)) {
+
   const p = Promise.resolve()
   timerFunc = () => {
+    // 在 微任务队列 中放入 flushCallbacks 函数
     p.then(flushCallbacks)
+    // 在这种状态下，回调被推入微任务队列，但队列没有被刷新，直到浏览器需要执行其他工作完，再执行
+
     // In problematic UIWebViews, Promise.then doesn't completely break, but
     // it can get stuck in a weird state where callbacks are pushed into the
     // microtask queue but the queue isn't being flushed, until the browser
@@ -74,6 +80,7 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   // Fallback to setImmediate.
   // Technically it leverages the (macro) task queue,
   // but it is still a better choice than setTimeout.
+  // 宏任务队列
   timerFunc = () => {
     setImmediate(flushCallbacks)
   }
@@ -83,6 +90,15 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
     setTimeout(flushCallbacks, 0)
   }
 }
+
+
+/**
+ * 
+ * 
+ * @param {*} cb 
+ * @param {*} ctx 
+ * @returns 
+ */
 
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
@@ -97,6 +113,8 @@ export function nextTick (cb?: Function, ctx?: Object) {
       _resolve(ctx)
     }
   })
+  // pending的作用： 保证在同一时刻，浏览器的任务队列中只有一个flushCallbacks函数
+  // 执行timerFunc()
   if (!pending) {
     pending = true
     timerFunc()

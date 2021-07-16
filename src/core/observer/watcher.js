@@ -110,7 +110,7 @@ export default class Watcher {
    * Evaluate the getter, and re-collect dependencies.
    */
 
-  // 重新依赖收集,
+  // 执行 this.getter，并重新收集依赖
   get () {
     // Dep.target=this
     pushTarget(this)
@@ -214,7 +214,7 @@ export default class Watcher {
    * Scheduler job interface.
    * Will be called by the scheduler.
    */
-  // 刷新队列函数
+  // 由 刷新队列函数 flushSchedulerQueue 调用
   run () {
     if (this.active) {
       const value = this.get()
@@ -227,6 +227,7 @@ export default class Watcher {
         this.deep
       ) {
         // set new value
+        // 更新旧值为新值
         const oldValue = this.value
         this.value = value
         // 如果是用户 watcher

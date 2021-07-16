@@ -25,6 +25,7 @@ let index = 0
 /**
  * Reset the scheduler's state.
  */
+// 重置调度
 function resetSchedulerState () {
   index = queue.length = activatedChildren.length = 0
   has = {}
@@ -81,17 +82,25 @@ function flushSchedulerQueue () {
   //    user watchers are created before the render watcher)
   // 3. If a component is destroyed during a parent component's watcher run,
   //    its watchers can be skipped.
+
+
+  // 按照队列watcher.id从小到大排序，保证先创建watcher先执行，父组件先于子组件创建
   queue.sort((a, b) => a.id - b.id)
 
   // do not cache length because more watchers might be pushed
   // as we run existing watchers
   for (index = 0; index < queue.length; index++) {
     watcher = queue[index]
+
+    // 执行 before 钩子
     if (watcher.before) {
       watcher.before()
     }
+
     id = watcher.id
+    // 清除缓存watcher.id
     has[id] = null
+    //执行更新函数，触发回调
     watcher.run()
 
     // in dev build, check and stop circular updates.
@@ -176,6 +185,7 @@ export function queueWatcher (watcher: Watcher) {
       // 当前是为刷新队列状态
       queue.push(watcher)
     } else {
+      // 已经刷新队列了
       // if already flushing, splice the watcher based on its id
       // if already past its id, it will be run next immediately.
       let i = queue.length - 1
@@ -189,9 +199,12 @@ export function queueWatcher (watcher: Watcher) {
       waiting = true
 
       if (process.env.NODE_ENV !== 'production' && !config.async) {
+        // 直接刷新调度队列
+        // 一般不会走这，这是同步执行的
         flushSchedulerQueue()
         return
       }
+      // 执行nextTick将回调函数放入callbacks数组
       nextTick(flushSchedulerQueue)
     }
   }
