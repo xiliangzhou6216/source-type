@@ -93,7 +93,8 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
 
 
 /**
- * 
+ * 1. 用户调用 Vue.nextTick 传递的回调函数
+ * 2. 更新组件传递flushSchedulerQueue函数
  * 
  * @param {*} cb 
  * @param {*} ctx 

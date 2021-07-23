@@ -3,6 +3,11 @@
 import { ASSET_TYPES } from 'shared/constants'
 import { isPlainObject, validateComponentName } from '../util/index'
 
+// const ASSET_TYPES = [
+//   'component',
+//   'directive',
+//   'filter'
+// ]
 export function initAssetRegisters (Vue: GlobalAPI) {
   /**
    * Create asset registration methods.
@@ -21,6 +26,7 @@ export function initAssetRegisters (Vue: GlobalAPI) {
         }
         if (type === 'component' && isPlainObject(definition)) {
           definition.name = definition.name || id
+          // Vue.extend( options )  definition就变成了组件钩子函数，使用时可直接 new Definition()
           definition = this.options._base.extend(definition)
         }
         if (type === 'directive' && typeof definition === 'function') {

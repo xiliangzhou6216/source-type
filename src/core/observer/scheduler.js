@@ -68,7 +68,9 @@ if (inBrowser && !isIE) {
 
 /**
  * Flush both queues and run the watchers.
+ * 刷新watcher队列
  */
+
 function flushSchedulerQueue () {
   currentFlushTimestamp = getNow()
   flushing = true
@@ -104,6 +106,7 @@ function flushSchedulerQueue () {
     watcher.run()
 
     // in dev build, check and stop circular updates.
+
     if (process.env.NODE_ENV !== 'production' && has[id] != null) {
       circular[id] = (circular[id] || 0) + 1
       if (circular[id] > MAX_UPDATE_COUNT) {
@@ -128,7 +131,9 @@ function flushSchedulerQueue () {
   resetSchedulerState()
 
   // call component updated and activated hooks
+  // 激活组件钩子
   callActivatedHooks(activatedQueue)
+  // 更新组件钩子
   callUpdatedHooks(updatedQueue)
 
   // devtool hook
@@ -176,6 +181,7 @@ function callActivatedHooks (queue) {
  * pushed when the queue is being flushed.
  */
 export function queueWatcher (watcher: Watcher) {
+  debugger
   const id = watcher.id
   if (has[id] == null) {
     // 缓存watcher.id
@@ -186,6 +192,9 @@ export function queueWatcher (watcher: Watcher) {
       queue.push(watcher)
     } else {
       // 已经刷新队列了
+      
+      // 场景
+      // 1. 异步触发 setter 2. watch 选项的回调函数 有更新另一个响应式数据的情况，也会触发setter
       // if already flushing, splice the watcher based on its id
       // if already past its id, it will be run next immediately.
       let i = queue.length - 1
@@ -195,6 +204,7 @@ export function queueWatcher (watcher: Watcher) {
       queue.splice(i + 1, 0, watcher)
     }
     // queue the flush
+    // 已经存在刷新watcher 队列的函数了
     if (!waiting) {
       waiting = true
 

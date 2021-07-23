@@ -31,6 +31,7 @@ export function initMixin(Vue: Class<Component>) {
     // 处理组件配置项
     // merge options
     if (options && options._isComponent) {
+      debugger
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
       // internal component options needs special treatment.

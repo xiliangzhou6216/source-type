@@ -428,7 +428,9 @@ export function mergeOptions(
     }
   }
   function mergeField(key) {
+    // 合并策略 优先使用childVal
     const strat = strats[key] || defaultStrat;
+    // 
     options[key] = strat(parent[key], child[key], vm, key);
   }
   return options;

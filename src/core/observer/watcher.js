@@ -214,9 +214,11 @@ export default class Watcher {
    * Scheduler job interface.
    * Will be called by the scheduler.
    */
-  // 由 刷新队列函数 flushSchedulerQueue 调用
+  // 1. 执行组件更新刷新队列函数flushSchedulerQueue 调用
+  // 2. 执行用户 watch 的回调函数调用。
   run () {
     if (this.active) {
+      // 收集依赖
       const value = this.get()
       if (
         value !== this.value ||
@@ -230,12 +232,13 @@ export default class Watcher {
         // 更新旧值为新值
         const oldValue = this.value
         this.value = value
-        // 如果是用户 watcher
         if (this.user) {
+           // 如果是用户 watcher
           const info = `callback for watcher "${this.expression}"`
           // 执行this.cb回调函数
           invokeWithErrorHandling(this.cb, this.vm, [value, oldValue], this.vm, info)
         } else {
+          // 组件更新
           console.log(9999999999)
           this.cb.call(this.vm, value, oldValue)
         }
