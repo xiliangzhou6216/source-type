@@ -31,7 +31,7 @@ export function initMixin(Vue: Class<Component>) {
     // 处理组件配置项
     // merge options
     if (options && options._isComponent) {
-      debugger
+      // debugger
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
       // internal component options needs special treatment.
@@ -46,10 +46,11 @@ export function initMixin(Vue: Class<Component>) {
       /**
        * 初始化根组件时会走这里，将全局配置选项合并在根组件的局部配置上
        *
-       * 组件选项合并，其实发生在三个地方
+       * 
+       * 至于每个子组件的选项合并则发生在两个地方：
        * 1. Vue.component用户注册的全局组件和自身内置组件都会合并根实例components 上
        * 2. 子组件 componnents:{ xx } 局部注册，执行编译器生成的render函数 进行选项合并
-       * 3. 这里根组件自身情况
+       * 
        */
       //  debugger
       vm.$options = mergeOptions(

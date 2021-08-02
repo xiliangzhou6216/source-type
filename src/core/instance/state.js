@@ -399,6 +399,7 @@ export function stateMixin (Vue: Class<Component>) {
 
   /**
    *  创建watcher
+   * 
    * @param {*} expOrFn 
    * @param {*} cb  
    * @param {*} options 
@@ -418,7 +419,7 @@ export function stateMixin (Vue: Class<Component>) {
     // 标记用户为watcher
     options.user = true
     const watcher = new Watcher(vm, expOrFn, cb, options)
-    // 立马执行
+    // 立马执行回调
     if (options.immediate) {
       const info = `callback for immediate watcher "${watcher.expression}"`
       pushTarget()

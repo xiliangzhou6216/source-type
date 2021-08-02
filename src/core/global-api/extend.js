@@ -1,3 +1,11 @@
+/*
+ * @Description: 
+ * @Version: 2.0
+ * @Autor: xiliang
+ * @Date: 2021-06-25 17:40:17
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2021-08-02 11:39:27
+ */
 /* @flow */
 
 import { ASSET_TYPES } from 'shared/constants'
@@ -9,6 +17,7 @@ export function initExtend (Vue: GlobalAPI) {
    * Each instance constructor, including Vue, has a unique
    * cid. This enables us to create wrapped "child
    * constructors" for prototypal inheritance and cache them.
+   * 基于vue扩展子类
    */
   Vue.cid = 0
   let cid = 1
@@ -30,6 +39,7 @@ export function initExtend (Vue: GlobalAPI) {
       validateComponentName(name)
     }
 
+    //定义Sub构造函数，和vue构造函数一样 
     const Sub = function VueComponent (options) {
       this._init(options)
     }
@@ -63,6 +73,7 @@ export function initExtend (Vue: GlobalAPI) {
       Sub[type] = Super[type]
     })
     // enable recursive self-lookup
+    // 递归组件的原理，如果组件设置了name属性，则将自己注册到自己的components选项中
     if (name) {
       Sub.options.components[name] = Sub
     }
