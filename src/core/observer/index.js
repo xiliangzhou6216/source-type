@@ -247,25 +247,31 @@ export function defineReactive (
 }
 
 /**
+ * 在对象上添加属性
  * Set a property on an object. Adds the new property and
  * triggers change notification if the property doesn't
  * already exist.
  */
 export function set (target: Array<any> | Object, key: any, val: any): any {
-  if (process.env.NODE_ENV !== 'production' &&
-    (isUndef(target) || isPrimitive(target))
-  ) {
-    warn(`Cannot set reactive property on undefined, null, or primitive value: ${(target: any)}`)
-  }
+  // if (process.env.NODE_ENV !== 'production' &&
+  //   (isUndef(target) || isPrimitive(target))
+  // ) {
+  //   warn(`Cannot set reactive property on undefined, null, or primitive value: ${(target: any)}`)
+  // }
+  // 处理数组，vue.set(arr,idx,val)
+  
   if (Array.isArray(target) && isValidArrayIndex(key)) {
     target.length = Math.max(target.length, key)
+    // 利用splice实现的
     target.splice(key, 1, val)
     return val
   }
+  // 更新对象已有属性
   if (key in target && !(key in Object.prototype)) {
     target[key] = val
     return val
   }
+  // debugger
   const ob = (target: any).__ob__
   if (target._isVue || (ob && ob.vmCount)) {
     process.env.NODE_ENV !== 'production' && warn(
@@ -278,6 +284,7 @@ export function set (target: Array<any> | Object, key: any, val: any): any {
     target[key] = val
     return val
   }
+  // 给对象添加新属性
   defineReactive(ob.value, key, val)
   ob.dep.notify()
   return val
