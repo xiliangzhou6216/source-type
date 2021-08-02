@@ -12,6 +12,7 @@ export function initAssetRegisters (Vue: GlobalAPI) {
   /**
    * Create asset registration methods.
    */
+  // Vue.directive(id, [definition])
   ASSET_TYPES.forEach(type => {
     Vue[type] = function (
       id: string,
@@ -32,6 +33,7 @@ export function initAssetRegisters (Vue: GlobalAPI) {
         if (type === 'directive' && typeof definition === 'function') {
           definition = { bind: definition, update: definition }
         }
+        // 在实例化时通过mergeOptions 将全局注册的组件合并每个组件配置对象的 components 中
         this.options[type + 's'][id] = definition
         return definition
       }

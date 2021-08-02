@@ -66,6 +66,12 @@ export function renderMixin (Vue: Class<Component>) {
     return nextTick(fn, this)
   }
 
+  /**
+   * 通过执行 render 函数生成 VNode
+   * 不过里面加了大量的异常处理代码
+   * @returns 
+   * 
+   */
   Vue.prototype._render = function (): VNode {
     const vm: Component = this
     const { render, _parentVnode } = vm.$options

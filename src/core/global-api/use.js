@@ -21,7 +21,6 @@ export function initUse (Vue: GlobalAPI) {
       plugin.apply(null, args)
     }
     installedPlugins.push(plugin)
-    debugger
     return this
   }
 }
