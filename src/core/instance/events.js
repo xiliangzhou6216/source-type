@@ -64,6 +64,7 @@ export function eventsMixin (Vue: Class<Component>) {
       // optimize hook:event cost by using a boolean flag marked at registration
       // instead of a hash lookup
       
+      // 比如从组件外部为组件的 mounted 方法注入额外的逻辑 <comp @hook:mounted="method" />
       // let ev=hook:beforeDestroy
       if (hookRE.test(event)) {
         vm._hasHookEvent = true

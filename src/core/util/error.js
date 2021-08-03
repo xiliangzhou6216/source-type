@@ -1,3 +1,4 @@
+
 /* @flow */
 
 import config from '../config'
@@ -33,6 +34,7 @@ export function handleError (err: Error, vm: any, info: string) {
   }
 }
 
+// 通用函数，执行指定函数 handler
 export function invokeWithErrorHandling (
   handler: Function,
   context: any,

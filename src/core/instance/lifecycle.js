@@ -358,6 +358,13 @@ export function deactivateChildComponent(vm: Component, direct?: boolean) {
   }
 }
 
+
+/**
+ * 执行实例指定的生命周期钩子函数
+ *  
+ * @param {*} vm 组件实例
+ * @param {*} hook  生命周期钩子函数
+ */
 export function callHook(vm: Component, hook: string) {
   // #7573 disable dep collection when invoking lifecycle hooks
   pushTarget();
@@ -368,6 +375,7 @@ export function callHook(vm: Component, hook: string) {
       invokeWithErrorHandling(handlers[i], vm, null, vm, info);
     }
   }
+  //  <comp @hook:mounted="method" />，则通过 $emit 触发该事件
   if (vm._hasHookEvent) {
     vm.$emit("hook:" + hook);
   }
