@@ -1,3 +1,4 @@
+
 /* @flow */
 
 import { toNumber, toString, looseEqual, looseIndexOf } from 'shared/util'
@@ -11,6 +12,8 @@ import { renderStatic, markOnce } from './render-static'
 import { bindObjectListeners } from './bind-object-listeners'
 import { resolveScopedSlots } from './resolve-scoped-slots'
 import { bindDynamicKeys, prependModifier } from './bind-dynamic-keys'
+
+// 渲染相关的简写工具函数
 
 export function installRenderHelpers (target: any) {
   target._o = markOnce

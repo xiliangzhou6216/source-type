@@ -69,6 +69,7 @@ export default {
   methods: {
     cacheVNode() {
       const { cache, keys, vnodeToCache, keyToCache } = this
+      // 缓存
       if (vnodeToCache) {
         const { tag, componentInstance, componentOptions } = vnodeToCache
         cache[keyToCache] = {
@@ -77,6 +78,7 @@ export default {
           componentInstance,
         }
         keys.push(keyToCache)
+        // 删除最老的Vnode
         // prune oldest entry
         if (this.max && keys.length > parseInt(this.max)) {
           pruneCacheEntry(cache, keys[0], keys, this._vnode)
@@ -117,6 +119,7 @@ export default {
     const componentOptions: ?VNodeComponentOptions = vnode && vnode.componentOptions
     if (componentOptions) {
       // check pattern
+      // 
       const name: ?string = getComponentName(componentOptions)
       const { include, exclude } = this
       if (

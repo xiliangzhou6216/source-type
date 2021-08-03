@@ -4,7 +4,7 @@
  * @Autor: xiliang
  * @Date: 2021-06-10 13:58:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-07-23 15:14:16
+ * @LastEditTime: 2021-08-03 14:41:57
 -->
 <!DOCTYPE html>
 <html>
@@ -39,7 +39,10 @@
 <body>
   <div id="demo">
     <button @click="buttonClick">父组件触发</button>
-    <ceshi @hook:mounted="childMounted" :childProps="childProps"></ceshi>
+    <keep-alive>
+      <ceshi @hook:mounted="childMounted" :childProps="childProps"></ceshi>
+    </keep-alive>
+    
   </div>
   <script>
     const ComponentA ={
@@ -143,7 +146,7 @@
             console.log(77777)
           }
           Vue.use(q)
-          // debugger
+          
           this.message=888888888
           console.log(this,'更新了')
         }
