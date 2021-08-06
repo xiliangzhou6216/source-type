@@ -1,9 +1,20 @@
+
 /* @flow */
 
 import { extend, warn, isObject } from 'core/util/index'
 
 /**
+ * 
  * Runtime helper for rendering <slot>
+ */
+
+/**
+ * 
+ * @param {*} name  插槽名字
+ * @param {*} fallbackRender   返回一个vnode
+ * @param {*} props 
+ * @param {*} bindObject 
+ * @returns 
  */
 export function renderSlot (
   name: string,
@@ -11,6 +22,7 @@ export function renderSlot (
   props: ?Object,
   bindObject: ?Object
 ): ?Array<VNode> {
+  // debugger
   const scopedSlotFn = this.$scopedSlots[name]
   let nodes
   if (scopedSlotFn) {

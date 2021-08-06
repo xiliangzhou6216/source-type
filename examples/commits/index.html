@@ -4,7 +4,7 @@
  * @Autor: xiliang
  * @Date: 2021-06-10 13:58:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-08-03 14:41:57
+ * @LastEditTime: 2021-08-04 11:51:06
 -->
 <!DOCTYPE html>
 <html>
@@ -39,10 +39,12 @@
 <body>
   <div id="demo">
     <button @click="buttonClick">父组件触发</button>
-    <keep-alive>
-      <ceshi @hook:mounted="childMounted" :childProps="childProps"></ceshi>
-    </keep-alive>
-    
+    <ceshi @hook:mounted="childMounted" :childProps="childProps">
+      <template #qwe="slotProps">
+        66666
+        <!-- {{ JSON.stringify(this)}} -->
+      </template>
+    </ceshi> 
   </div>
   <script>
     const ComponentA ={
@@ -57,8 +59,10 @@
     Vue.component('ceshi', {
       data() {
         return {
-          // ss: 111,
-          // a:1
+          user:{
+            lastName:88888888888,
+            firstName:6666666
+          }
         }
       },
       props: {
@@ -72,6 +76,9 @@
         <div>
           <div>全局组件</div>
           <div>全局组件{{test()}}</div> 
+          <slot :ss="user" name="qwe">
+            {{user.firstName}}
+          </slot>
         </div>
       `,
       components: {

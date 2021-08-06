@@ -375,7 +375,7 @@ export function callHook(vm: Component, hook: string) {
       invokeWithErrorHandling(handlers[i], vm, null, vm, info);
     }
   }
-  //  <comp @hook:mounted="method" />，则通过 $emit 触发该事件
+  //  <comp @hook:mounted="method" />，则通过 $emit 触发该事件`
   if (vm._hasHookEvent) {
     vm.$emit("hook:" + hook);
   }
