@@ -67,7 +67,7 @@ export function renderMixin (Vue: Class<Component>) {
   }
 
   /**
-   * 通过执行 render 函数生成 VNode
+   * 通过执行从 AST 生成render渲染函数生成 VNode
    * 不过里面加了大量的异常处理代码
    * @returns 
    * 
