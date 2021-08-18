@@ -18,6 +18,16 @@ function createFunction (code, errors) {
   }
 }
 
+
+/**
+ * 1. 执行编译函数，得到编译结果->compile
+ * 2. 将编译得到的字符串代码通过 new Function(codeStr) 转换成可执行的函数
+ * 3. 缓存编译结果
+ * 
+ * @param {*} compile 
+ * @returns  { render, staticRenderFns }
+ */
+
 export function createCompileToFunctionFn (compile: Function): Function {
   const cache = Object.create(null)
 

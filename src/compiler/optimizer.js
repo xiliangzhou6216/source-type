@@ -18,6 +18,15 @@ const genStaticKeysCached = cached(genStaticKeys)
  *    create fresh nodes for them on each re-render;
  * 2. Completely skip them in the patching process.
  */
+
+/**
+ * 1. 遍历ast对象，标记每个节点是动态节点还是静态节点，然后标记静态根节点
+ * 2. 后续更新的过程跳过静态节点
+ * 
+ * @param {*} root 
+ * @param {*} options 
+ * @returns 
+ */
 export function optimize (root: ?ASTElement, options: CompilerOptions) {
   if (!root) return
   isStaticKey = genStaticKeysCached(options.staticKeys || '')

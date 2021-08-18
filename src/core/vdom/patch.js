@@ -401,6 +401,16 @@ export function createPatchFunction (backend) {
     }
   }
 
+/**
+ * diff 过程:
+ *   diff 优化：做了四种假设，假设新老节点开头结尾有相同节点的情况，一旦命中假设，就避免了一次循环，以提高执行效率
+ *             如果不幸没有命中假设，则执行遍历，从老节点中找到新开始节点
+ *             找到相同节点，则执行 patchVnode，然后将老节点移动到正确的位置
+ *   如果老节点先于新节点遍历结束，则剩余的新节点执行新增节点操作
+ *   如果新节点先于老节点遍历结束，则剩余的老节点执行删除操作，移除这些老节点
+ */
+
+
   function updateChildren (parentElm, oldCh, newCh, insertedVnodeQueue, removeOnly) {
     let oldStartIdx = 0
     let newStartIdx = 0
@@ -497,6 +507,15 @@ export function createPatchFunction (backend) {
       if (isDef(c) && sameVnode(node, c)) return i
     }
   }
+
+/**
+ * 更新节点
+ *   全量的属性更新
+ *   如果新老节点都有孩子，则递归执行 diff
+ *   如果新节点有孩子，老节点没孩子，则新增新节点的这些孩子节点
+ *   如果老节点有孩子，新节点没孩子，则删除老节点的这些孩子
+ *   更新文本节点
+ */
 
   function patchVnode (
     oldVnode,
@@ -697,7 +716,15 @@ export function createPatchFunction (backend) {
     }
   }
 
+/**
+ * vm.__patch__
+ *   1、新节点不存在，老节点存在，调用 destroy，销毁老节点
+ *   2、如果 oldVnode 是真实元素，则表示首次渲染，创建新节点，并插入 body，然后移除老节点
+ *   3、如果 oldVnode 不是真实元素，则表示更新阶段，执行 patchVnode
+ */
+
   return function patch (oldVnode, vnode, hydrating, removeOnly) {
+     // 销毁节点
     if (isUndef(vnode)) {
       if (isDef(oldVnode)) invokeDestroyHook(oldVnode)
       return
@@ -706,11 +733,15 @@ export function createPatchFunction (backend) {
     let isInitialPatch = false
     const insertedVnodeQueue = []
 
+
     if (isUndef(oldVnode)) {
+       // 组件初次渲染
       // empty mount (likely as component), create new root element
+
       isInitialPatch = true
       createElm(vnode, insertedVnodeQueue)
     } else {
+       // 更新节点
       const isRealElement = isDef(oldVnode.nodeType)
       if (!isRealElement && sameVnode(oldVnode, vnode)) {
         // patch existing root node

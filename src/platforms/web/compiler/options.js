@@ -1,3 +1,4 @@
+
 /* @flow */
 
 import {
@@ -14,7 +15,10 @@ import { isUnaryTag, canBeLeftOpenTag } from './util'
 
 export const baseOptions: CompilerOptions = {
   expectHTML: true,
+  // 处理 class、style、v-model
   modules,
+  // 处理指令
+  // 是否是 pre 标签
   directives,
   isPreTag,
   isUnaryTag,

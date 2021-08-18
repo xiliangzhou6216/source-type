@@ -40,6 +40,13 @@ export type CodegenResult = {
   staticRenderFns: Array<string>
 };
 
+/**
+ * 从 AST 生成渲染函数
+ * 
+ * @param {*} ast 
+ * @param {*} options 
+ * @returns 
+ */
 export function generate (
   ast: ASTElement | void,
   options: CompilerOptions

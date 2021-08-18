@@ -57,6 +57,14 @@ let platformMustUseProp
 let platformGetTagNamespace
 let maybeComponent
 
+
+/**
+ * 为指定元素创建 AST 对象
+ * @param {*} tag 
+ * @param {*} attrs 
+ * @param {*} parent 
+ * @returns 
+ */
 export function createASTElement (
   tag: string,
   attrs: Array<ASTAttr>,

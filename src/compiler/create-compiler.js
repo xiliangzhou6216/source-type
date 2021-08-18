@@ -1,3 +1,4 @@
+
 /* @flow */
 
 import { extend } from 'shared/util'
@@ -66,7 +67,6 @@ export function createCompilerCreator (baseCompile: Function): Function {
       compiled.tips = tips
       return compiled
     }
-
     return {
       compile,
       compileToFunctions: createCompileToFunctionFn(compile)

@@ -14,6 +14,12 @@ const idToTemplate = cached(id => {
   return el && el.innerHTML
 })
 
+
+/**
+ * 编译器的入口
+ * 
+ * 
+ */
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
