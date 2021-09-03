@@ -4,7 +4,7 @@
  * @Autor: xiliang
  * @Date: 2021-06-10 13:58:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-08-04 11:51:06
+ * @LastEditTime: 2021-09-03 15:16:24
 -->
 <!DOCTYPE html>
 <html>
@@ -38,11 +38,10 @@
 
 <body>
   <div id="demo">
-    <button @click="buttonClick">父组件触发</button>
+    <button @click="buttonClick">父组件触发 {{currentBranch}}</button>
     <ceshi @hook:mounted="childMounted" :childProps="childProps">
       <template #qwe="slotProps">
         66666
-        <!-- {{ JSON.stringify(this)}} -->
       </template>
     </ceshi> 
   </div>
@@ -71,7 +70,7 @@
           default: () => 'xiliang'
         }
       },
-
+      inject: ['foo'],
       template: `
         <div>
           <div>全局组件</div>
@@ -130,19 +129,14 @@
       components: {
         // ComponentB
       },
+      provide: {
+        foo: 'bar'
+      },
       mounted() {
-
-      },
-      created: function () {
         console.log(this,'父级');
-      },
-      watch: {
-        // message(val){
-        //   console.log(val,666)
-        // }  
-      },
-      computed:{
-       
+        this.$watch('xxx',function(val) {
+            console.log(val)
+        })
       },
       methods: {
         childMounted(){
