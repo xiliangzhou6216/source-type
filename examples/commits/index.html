@@ -4,7 +4,7 @@
  * @Autor: xiliang
  * @Date: 2021-06-10 13:58:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-09-03 15:16:24
+ * @LastEditTime: 2021-09-03 17:58:50
 -->
 <!DOCTYPE html>
 <html>
@@ -38,7 +38,7 @@
 
 <body>
   <div id="demo">
-    <button @click="buttonClick">父组件触发 {{currentBranch}}</button>
+    <button @click="buttonClick">父组件触发 {{message}}</button>
     <ceshi @hook:mounted="childMounted" :childProps="childProps">
       <template #qwe="slotProps">
         66666

@@ -4,7 +4,7 @@
  * @Autor: xiliang
  * @Date: 2021-06-25 17:40:17
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-07-15 15:04:40
+ * @LastEditTime: 2021-09-06 11:42:59
  */
 
 /* @flow */
@@ -24,7 +24,7 @@ let uid = 0
 // 1. 读取响应式数据,负责依赖收集,每个dep依赖的watcher有那些
 // 2. 在响应式数据更新时,负责通知dep中那些watcher去执行update方法
 export default class Dep {
-  static target: ?Watcher;
+  static target: ?Watcher; // 全局唯一的 Watcher  类似window.target
   id: number;
   subs: Array<Watcher>;
 
@@ -44,6 +44,7 @@ export default class Dep {
 
   // 依赖收集，在 dep 中添加 watcher，也在 watcher 中添加 dep
   depend () {
+    // 同一时间只能有一个全局的 Watcher 被计算
     if (Dep.target) {
       Dep.target.addDep(this)
     }

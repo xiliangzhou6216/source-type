@@ -110,7 +110,7 @@ export default class Watcher {
    * Evaluate the getter, and re-collect dependencies.
    */
 
-  // 执行 this.getter，并重新收集依赖
+  // 只有watcher执行了this.getter，才会重新收集依赖
   get () {
     // Dep.target=this
     pushTarget(this)
@@ -238,6 +238,7 @@ export default class Watcher {
           // 执行this.cb回调函数
           invokeWithErrorHandling(this.cb, this.vm, [value, oldValue], this.vm, info)
         } else {
+          debugger
           // 组件更新
           console.log(9999999999)
           this.cb.call(this.vm, value, oldValue)

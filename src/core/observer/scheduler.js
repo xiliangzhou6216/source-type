@@ -181,7 +181,6 @@ function callActivatedHooks (queue) {
  * pushed when the queue is being flushed.
  */
 export function queueWatcher (watcher: Watcher) {
-  debugger
   const id = watcher.id
   if (has[id] == null) {
     // 缓存watcher.id
