@@ -191,7 +191,7 @@ export function mountComponent(
       const id = vm._uid;
       const startTag = `vue-perf-start:${id}`;
       const endTag = `vue-perf-end:${id}`;
-
+      
       mark(startTag);
       const vnode = vm._render();
       mark(endTag);
@@ -204,6 +204,7 @@ export function mountComponent(
     };
   } else {
     updateComponent = () => {
+      // debugger
       vm._update(vm._render(), hydrating);
     };
   }

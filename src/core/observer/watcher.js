@@ -27,7 +27,6 @@ let uid = 0
 
 
 // 数据更新时 watcher会被触发,访问计算属性或者$watch()也会被触发watcher
-// 一个组件一个 watcher 这个不理解
 
 export default class Watcher {
   vm: Component;
