@@ -78,7 +78,7 @@ export default {
           componentInstance,
         }
         keys.push(keyToCache)
-        // 删除最老的Vnode
+        // 删除最老的Vnode(keys中第一个)
         // prune oldest entry
         if (this.max && keys.length > parseInt(this.max)) {
           pruneCacheEntry(cache, keys[0], keys, this._vnode)
@@ -101,7 +101,9 @@ export default {
 
   mounted () {
     this.cacheVNode()
+    console.log(888888888)
     this.$watch('include', val => {
+      console.log(7777)
       pruneCache(this, name => matches(val, name))
     })
     this.$watch('exclude', val => {

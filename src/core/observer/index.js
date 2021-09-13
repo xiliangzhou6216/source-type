@@ -258,15 +258,16 @@ export function set (target: Array<any> | Object, key: any, val: any): any {
   // ) {
   //   warn(`Cannot set reactive property on undefined, null, or primitive value: ${(target: any)}`)
   // }
-  // 处理数组，vue.set(arr,idx,val)
-  
+
+  // 数组
   if (Array.isArray(target) && isValidArrayIndex(key)) {
+    // 修改数组长度，防止索引>数组长度
     target.length = Math.max(target.length, key)
     // 利用splice实现的
     target.splice(key, 1, val)
     return val
   }
-  // 更新对象已有属性
+  // 更新对象已有属性，直接赋值
   if (key in target && !(key in Object.prototype)) {
     target[key] = val
     return val
@@ -280,10 +281,14 @@ export function set (target: Array<any> | Object, key: any, val: any): any {
     )
     return val
   }
+  // target不是响应对象，直接赋值
   if (!ob) {
     target[key] = val
     return val
   }
+
+  
+
   // 给对象添加新属性
   defineReactive(ob.value, key, val)
   ob.dep.notify()

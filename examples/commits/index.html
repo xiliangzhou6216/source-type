@@ -4,7 +4,7 @@
  * @Autor: xiliang
  * @Date: 2021-06-10 13:58:48
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-09-07 17:17:07
+ * @LastEditTime: 2021-09-10 13:44:10
 -->
 <!DOCTYPE html>
 <html>
@@ -39,11 +39,14 @@
 <body>
   <div id="demo">
     <button @click="buttonClick">父组件触发 {{message}}</button>
+    {{myObject}}
+
     <ceshi @hook:mounted="childMounted" :childProps="childProps">
       <template #qwe="slotProps">
         66666
       </template>
     </ceshi> 
+
   </div>
   <script>
     const ComponentA ={
@@ -86,6 +89,9 @@
       created() {
        
       },
+      activated() {
+           console.log(21221)
+      },
       mounted() {
         console.log(this,'子级');
       },
@@ -121,10 +127,12 @@
       el: "#demo",
 
       data: {
+        include:'',
         childProps: '121221',
         branches: ["master", "dev"],
         currentBranch: "master",
-        message:'ggggg'
+        message:'ggggg',
+        myObject:{}
       },
       components: {
         // ComponentB
@@ -134,6 +142,7 @@
       },
       mounted() {
         console.log(this,'父级');
+        this.myObject.aa=444
         this.$watch('xxx',function(val) {
             console.log(val)
         })
@@ -147,9 +156,11 @@
             console.log(77777)
           }
           Vue.use(q)
-          
+          // this.myObject.aa=444
           this.message=888888888
-          console.log(this,'更新了')
+          const o={}
+          this.$set(this.myObject,'qeee',4444)
+          console.log(this,o,'更新了')
         }
       },
     });

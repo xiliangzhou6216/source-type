@@ -1,3 +1,4 @@
+
 /* @flow */
 
 import Vue from 'core/index'
@@ -39,6 +40,7 @@ Vue.prototype.$mount = function (
   hydrating?: boolean
 ): Component {
   el = el && inBrowser ? query(el) : undefined
+  // debugger
   return mountComponent(this, el, hydrating)
 }
 
